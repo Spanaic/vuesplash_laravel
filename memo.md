@@ -31,6 +31,9 @@ mix.browserSync({
     proxy: '0.0.0.0:8081', //アプリの起動アドレス
     open: false //ブラウザを自動で開かない
 }) //jsやphpファイル変更時にhot reloadする
+```
+```js
+mix.browserSync('vuesplash.test')
     .js('resources/js/app.js', 'public/js')
     //第一引数 = コンパイル対象のファイル
     //第二引数 = コンパイル結果の配置先
@@ -38,6 +41,8 @@ mix.browserSync({
     // バージョニングが有効になる
     // ブラウザがキャッシュを読み込まないようにビルドの度にランダムな文字列をurlにつける
 ```
+
+* **dockerでbuildしてる場合は(.js().version()は要らない)**
 
 2. テンプレート側でmix関数と組み合わせて使う。
 
@@ -54,3 +59,37 @@ mix.browserSync({
 ```html
 <script src="/js/app.js?id=87459a9d906e11120dd5" defer=""></script>
 ```
+
+# .blade.php
+
+`.blade.html`じゃないよ！`.blade.php`だよ！
+
+# 開発環境の立ち上げについて
+
+**`npm run watch`と`php artisan serve --host 0.0.0.0 --port 8081`の2つを行い、サーバー側とクライアント側の双方を起動しないとVueページは表示されない**
+
+# npm install -D　の-Dオプションについて
+
+カレントディレクトリに指定のパッケージをインストールするときに package.json の devDependencies欄 にパッケージ名が記録される。
+
+# コンポーネントのルーティングが上手くいかないとき（表示されない）
+
+[初心者向：Vue.js コンポーネント作成がうまくいかないときにチェックする5つのこと](https://qiita.com/kokoe/items/a5f4b950c36bfcd61ad9)
+
+```js
+import Vue from 'vue'
+// ルーティングの定義をインポートする
+import router from './router'
+// ルートコンポーネントをインポートする
+import App from './App.vue'
+
+new Vue({
+    el: '#app',
+    router, //ルーティングの定義を読み込む
+    components: { App }, //ルートコンポーネントの使用を宣言する
+    template: '<App />' //ルートコンポーネントを描画する
+})
+```
+
+1. コンポーネントの読み込み、router.jsでは一つのパスにつき一つのコンポーネントを読み込むため`component: Hogehoge`
+2. app.jsなどの複数のコンポーネントを読み込むファイルでは、**`components: { App }`のように's'と’{}’を忘れない！**
