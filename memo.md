@@ -3,3 +3,54 @@
 * PHPのパッケージ管理ツール
     * 利用するパッケージ(ライブラリ)間の依存関係も解決してくれる。
 
+# Laravelのインストール方法
+
+[ララ帳](https://laravel10.wordpress.com/2015/02/13/laravel%e3%81%ae%e3%82%a4%e3%83%b3%e3%82%b9%e3%83%88%e3%83%bc%e3%83%ab/#more-13)
+
+## composer経由の場合
+
+* `composer create-project --prefer-dist laravel/laravel PROJECT_NAME`
+
+## Laravelインストーラーの場合
+
+1. `composer global require "laravel/installer"`
+2. PATHを通す
+    ```~/.composer/vendor/bin
+    # ~/.bashrc
+    export PATH=$HOME/.compser/vendor/bin:$PATH
+    ```
+3. `laravel new PROJECT_NAME`
+
+# Laravel Mixとは？
+
+1. js, vue,　scssなどをコンパイルするライブラリ
+    * webpackの設定がビルド時に自動で生成される
+
+```js
+mix.browserSync({
+    proxy: '0.0.0.0:8081', //アプリの起動アドレス
+    open: false //ブラウザを自動で開かない
+}) //jsやphpファイル変更時にhot reloadする
+    .js('resources/js/app.js', 'public/js')
+    //第一引数 = コンパイル対象のファイル
+    //第二引数 = コンパイル結果の配置先
+    .version()
+    // バージョニングが有効になる
+    // ブラウザがキャッシュを読み込まないようにビルドの度にランダムな文字列をurlにつける
+```
+
+2. テンプレート側でmix関数と組み合わせて使う。
+
+```html
+<script src="{{ mix('js/app.js) }}" defer></script>
+```
+
+3. バージョニングすることで以下のHTMLに変換される
+    1. クエリパラメータにランダムなidが付与され
+    る。
+    2. コンパイルされる度にURLが変わるのでブラウザからは異なるリクエストと見なされてキャッシュを読まずにサーバとの通信を行う。
+
+
+```html
+<script src="/js/app.js?id=87459a9d906e11120dd5" defer=""></script>
+```
