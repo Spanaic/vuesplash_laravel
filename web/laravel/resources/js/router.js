@@ -1,3 +1,4 @@
+// 'vue'と'vue-router'をインポート
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -7,11 +8,9 @@ import Login from './pages/Login.vue'
 
 // VueRouterプラグインを使用
 // これで<RouterView />コンポーネントが使用できる
-
 Vue.use(VueRouter)
 
 // パスとコンポーネントのマッピング
-
 const routes = [
     {
         path: '/',
@@ -23,6 +22,8 @@ const routes = [
     }
 ]
 
+// histroyモードでURLの'#'をなくす
+// VueRouterインスタンスを生成
 const router = new VueRouter({
     mode: 'history',
     routes
