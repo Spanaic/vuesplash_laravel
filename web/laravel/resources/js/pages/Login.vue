@@ -56,11 +56,17 @@ export default {
     };
   },
   methods: {
-    login() {
-      console.log(this.loginForm);
+    async login() {
+      await this.$store.dispatch("auth/login", this.loginForm);
+      this.$router.push("/");
     },
-    register() {
-      console.log(this.registerForm);
+    async register() {
+      // authストアのregisterアクションを呼び出す
+      await this.$store.dispatch("auth/register", this.registerForm);
+      // authストア作成時に、namaspaced: trueで名前空間を有効化させたので、モジュール名を頭に付けた'auth/register'でアクション指定が出来る
+
+      // トップページに移動する
+      this.$router.push("/");
     }
   }
 };

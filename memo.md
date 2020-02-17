@@ -158,3 +158,48 @@ $instance->メソッド名2();
 
 1. メソッド外にあるクラス内変数にアクセスできる
     1. thisを使用しなければメソッド内のローカル変数を参照する。
+
+# namespaced: trueの価値 & vuexのstoreをモジュール毎に作成する場合
+
+1. Vuexでモジュール毎に分けてファイルを作成している場合、`namespaced: true`にしておくと2つのメリットが有る。
+    1. dispatchで呼び出す時に、`'auth/register'`という名前でアクションを指定できる
+    2. 仮に他のストアモジュールにもregisterというアクションがあったとしても、このように名前空間を有効にしておくと呼び出しで区別ができる。
+
+```js
+const state{
+    user: null
+};
+const getters{};
+const mutations{
+    setUser(state, payload) {
+        state.user = payload
+    }
+};
+const actions = {
+    async register(context, data) {
+        let res = await axios.post("auth/register",data)
+        store.commit('setUser', res.data)
+    }
+}
+
+export default {
+    namespaced: true
+    state,
+    getters,
+    mutations,
+    actions
+}
+```
+
+# もしかしてthisの参照って（vue編）
+
+1. `Vue.use(VueRouter)`とか`Vue.use(Vuex)`は、thisから参照させるために宣言してる？
+    2. `this.$router`や`this.$store`など
+
+    ```js
+    Vue.use(VueRouter)
+
+    <!-- 中略 -->
+
+    export default router
+    ```
