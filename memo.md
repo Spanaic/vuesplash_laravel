@@ -203,3 +203,51 @@ export default {
 
     export default router
     ```
+# 新たなcurrentUser取得の切り口
+
+1. App.vueでvueのインスタンスが作成される前に呼び出す
+
+```js
+import './bootstrap'
+import Vue from 'vue'
+// ルーティングの定義をインポートする
+import router from './router'
+// ルートコンポーネントをインポートする
+import store from './store'
+// vuexのstoreをインポートする
+import App from './App.vue'
+
+const createApp = async () => {
+    await store.dispatch('auth/currentUser')
+}
+
+new Vue({
+    el: '#app',
+    router, //ルーティングの定義を読み込む
+    store, //storeを追加
+    components: { App }, //ルートコンポーネントの使用を宣言する
+    template: '<App />' //ルートコンポーネントを描画する
+})
+
+createApp()
+```
+
+# middlewareをピュアvueで書いた場合はrouter.jsに記述する
+
+```js
+        path: '/login',
+        component: Login,
+        beforeEnter(to, from, next) {
+            if (store.getters['auth/check']) {
+                next('/') // ログインしていればトップページへ
+            } else {
+                next() // ログインしていなければそのままloginコンポーネントをレンダリング
+            }
+        }
+```
+
+1. to = ルートオブジェクト
+2. from = アクセス元のルート
+3. next = ページの移動先
+    1. next()を引数なしで呼ぶとそのまま切り替わる
+    2. next()を引数有りで呼ぶと**引数のページに切り替わり、リダイレクトのような役割を果たす**
