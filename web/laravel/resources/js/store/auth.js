@@ -4,7 +4,12 @@ const state = {
     user: null
 }
 
-const getters = {}
+const getters = {
+    check: state => !!state.user,
+    // 確実に真偽値を返すために二重否定
+    username: state => state.user ? state.user.name : ''
+    // 仮にuserがnullの場合に呼ばれてもエラーが発生しないように空文字を返す
+}
 
 const mutations = {
     setUser(state, user) {
