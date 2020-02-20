@@ -9,7 +9,7 @@ import Login from './pages/Login.vue'
 import store from './store'
 
 // エラーページのコンポーネントをインポート
-import SystemError from './pages/System.vue';
+import SystemError from './pages/errors/System.vue';
 
 
 // VueRouterプラグインを使用
