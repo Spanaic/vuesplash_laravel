@@ -8,6 +8,10 @@ import Login from './pages/Login.vue'
 
 import store from './store'
 
+// エラーページのコンポーネントをインポート
+import SystemError from './pages/System.vue';
+
+
 // VueRouterプラグインを使用
 // これで<RouterView />コンポーネントが使用できる
 Vue.use(VueRouter)
@@ -29,6 +33,11 @@ const routes = [
                 console.log("store.getters", store.getters['auth/check'])
             }
         }
+    },
+    // エラーページへのルートを設定
+    {
+        path: '/500',
+        component: SystemError
     }
 ]
 

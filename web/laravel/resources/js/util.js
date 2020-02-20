@@ -21,3 +21,7 @@ export function getCookieValue(searchKey) {
 
 // document.cookieによって参照出来る値の例
 // name=12345;token=67890;key=abcde
+
+export const OK = 200
+export const CREATED = 201
+export const INTERNAL_SERVER_ERROR = 500

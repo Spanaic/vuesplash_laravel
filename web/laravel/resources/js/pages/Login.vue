@@ -55,10 +55,18 @@ export default {
       }
     };
   },
+  computed: {
+    apiStatus() {
+      return this.$store.state.auth.apiStatus;
+    }
+  },
   methods: {
     async login() {
       await this.$store.dispatch("auth/login", this.loginForm);
-      this.$router.push("/");
+      if (this.apiStatus) {
+        //apiStatusがtrue = 200が返ってきてる場合のみ
+        this.$router.push("/");
+      }
     },
     async register() {
       // authストアのregisterアクションを呼び出す
