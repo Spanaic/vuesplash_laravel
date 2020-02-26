@@ -11,6 +11,9 @@ import store from './store'
 // エラーページのコンポーネントをインポート
 import SystemError from './pages/errors/System.vue';
 
+// 写真詳細ページのコンポーネントをインポート
+import PhotoDetail from './pages/PhotoDetail.vue';
+
 
 // VueRouterプラグインを使用
 // これで<RouterView />コンポーネントが使用できる
@@ -38,6 +41,12 @@ const routes = [
     {
         path: '/500',
         component: SystemError
+    },
+    // 写真詳細ページへのルートを設定
+    {
+        path: '/photos/:id', //pureなvueであればページ名に`_id`としなくてもrouterの記述でどうにか出来る
+        component: PhotoDetail,
+        props: ture //変数部分のIDの値をpropsとして受け取る
     }
 ]
 
