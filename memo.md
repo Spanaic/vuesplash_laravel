@@ -255,3 +255,34 @@ createApp()
 # laravelに記述したテスト(test)ファイルを実行するコマンド
 
 `./vendor/bin/phpunit --testdox`
+
+# コンポーネントの表示を親コンポーネントから操作する
+
+```html
+<button @click="showForm = !showForm" class="button">
+</button>
+<PhotoForm v-model="showForm" />
+```
+
+```js
+export default{
+    data() {
+        return {
+            showForm: false
+        }
+    }
+}
+```
+1. `@click="showForm = true"`だとtrueに切り替わるけど、falseにできずコンポーネントが表示されっぱなし。
+2. フォームを表示するかどうかを示す変数をv-modelで管理する
+
+```js (formのコンポーネント側)
+export default {
+  props: {
+    value: {
+      type: Boolean,
+      required: true // ここでshowFormから受け取ったtrueを元に表示のon/offを切り替えてる...のかな？
+    }
+  }
+};
+```

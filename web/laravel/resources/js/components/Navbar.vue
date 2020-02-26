@@ -3,7 +3,7 @@
     <RouterLink class="navbar__brand" to="/">Vuesplash</RouterLink>
     <div class="navbar__menu">
       <div v-if="isLogin" class="navbar__item">
-        <button @click="showForm = ! showForm" class="button">
+        <button @click="showForm = !showForm" class="button">
           <i class="icon ion-md-add">Submit a photo</i>
         </button>
       </div>
