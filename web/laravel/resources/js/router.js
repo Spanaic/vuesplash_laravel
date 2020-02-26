@@ -46,7 +46,7 @@ const routes = [
     {
         path: '/photos/:id', //pureなvueであればページ名に`_id`としなくてもrouterの記述でどうにか出来る
         component: PhotoDetail,
-        props: ture //変数部分のIDの値をpropsとして受け取る
+        props: true //変数部分のIDの値をpropsとして受け取る
     }
 ]
 

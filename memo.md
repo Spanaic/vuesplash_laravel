@@ -359,3 +359,43 @@ export default {
 1. 注目すべきはバリデーションエラーの記述位置
 2. `this.reset()`と`this.$emit('input', false)`でformを閉じる前に表示している
 3. **【ここ重要】**errorsにエラーメッセージを格納して、`return false`でその後処理が走らないように中断している
+
+# サクセスメッセージの表示と非表示処理
+
+```js (message.js(ストア内モジュール))
+const state = {
+    content: ''
+}
+
+const mutations = {
+    setContent(state, { content, timeout }) {
+        state.content = content
+
+        if (typeof timeout === 'undefined') {
+            timeout = 3000
+        }
+
+        // メッセージの非表示処理をmutations内に記述する
+        setTimeout(() => (state.content = ''), timeout)
+    }
+}
+
+export default {
+    namespaced: true,
+    state,
+    mutations
+}
+```
+
+1. Message.vueコンポーネントをApp.vueにグローバルな形で配置するのは、メッセージの表示が、ある一定の条件ではなく、様々な条件にグローバルで使い回せるようにするため。
+
+# ch10で躓いたところ
+
+1. post`http://localhost:3000/api/photos`で500エラーとなっていた
+    1. axiosの叩き方が間違ってる
+        1. 叩き先はlaravel api のcreateアクションのため間違いなかった
+    2. 叩いている先が間違っている
+        1. photocontrollerの記述の間違いも無かった。
+        2. コントローラや.envなどの設定が間違っていない
+        3. 呼び出しのrouteが怪しい
+            1. `contoroller` => `controller` タイポを直して無事修正完了！

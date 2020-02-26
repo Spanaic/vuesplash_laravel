@@ -81,12 +81,15 @@ export default {
     },
     // fileを送信するメソッド
     async submit() {
+      this.loading = true;
       // FormDataのインスタンスを生成
       // FormData APIを使用
       const formData = new FormData();
       formData.append("photo", this.photo);
+      console.log("this.photo", this.photo);
+      console.log("formData", formData);
       const response = await axios.post("/api/photos", formData);
-
+      console.log("response", response);
       // Loaderコンポーネントの表示をoffにする
       this.loading = false;
 
@@ -101,16 +104,23 @@ export default {
       // 送信が終わったらresetを呼んで入力値をクリアする。
       this.reset();
       // inputイベントで発行される値をfalseにすることで、Navbarの`showForm`がfalseになる => 自動でフォームが閉じる
-      this$emit("input", false);
+      this.$emit("input", false);
       // 投稿完了後、axiosのresに入ってるidの詳細ページに遷移する
 
       if (response.status !== CREATED) {
         //   vuexのerror codeにステータスをsetする
         this.$store.commit("error/setCode", response.status);
+        console.log("error", this.$store.error.status);
         return false;
       }
 
-      this.$router.push(`/photo/${response.data.id}`);
+      // サクセスメッセージの登録
+      this.$store.commit("message/setContent", {
+        content: "写真が投稿されました!",
+        timeout: 6000
+      });
+
+      this.$router.push(`/photos/${response.data.id}`);
     }
   }
 };
