@@ -3,8 +3,8 @@
     <h2 class="title">Submit a photo</h2>
     <form class="form">
       <input type="file" class="form__item" @change="onFileChange" />
-      <output class="form_output" v-if="preview">
-        <img src="preview" alt />
+      <output class="form__output" v-if="preview">
+        <img :src="preview" alt />
       </output>
       <div class="form__button">
         <button class="button button--inverse" type="submit">submit</button>
