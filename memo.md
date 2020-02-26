@@ -327,3 +327,35 @@ export default {
 
 ## previewを実装後、ファイルが送信できるように書き換える
 
+```js
+    async submit() {
+      // FormDataのインスタンスを生成
+      // FormData APIを使用
+      const formData = new FormData();
+      formData.append("photo", this.photo);
+      const response = await axios.post("/api/photos", formData);
+
+      // バリデーションエラー処理
+      // エラーメッセージを表示するタイミング上、formを閉じる前に表示させる
+      if (response.status === UNPROCESSABLE_ENTITY) {
+        this.errors = response.data.errors;
+        // エラーをセットして表示する処理が終わったあとに、returnすることで処理を中断する
+        return false;
+      }
+
+      // 送信が終わったらresetを呼んで入力値をクリアする。
+      this.reset();
+      // inputイベントで発行される値をfalseにすることで、Navbarの`showForm`がfalseになる => 自動でフォームが閉じる
+      this$emit("input", false);
+      // 投稿完了後、axiosのresに入ってるidの詳細ページに遷移する
+
+      if (response.status !== CREATED) {
+        //   vuexのerror codeにステータスをsetする
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+```
+
+1. 注目すべきはバリデーションエラーの記述位置
+2. `this.reset()`と`this.$emit('input', false)`でformを閉じる前に表示している
+3. **【ここ重要】**errorsにエラーメッセージを格納して、`return false`でその後処理が走らないように中断している

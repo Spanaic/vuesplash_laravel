@@ -2,6 +2,11 @@
   <div v-show="value" class="photo-form">
     <h2 class="title">Submit a photo</h2>
     <form class="form" @submit.prevent="submit">
+      <div class="errors" v-if="errors">
+        <ul v-if="errors.photo">
+          <li v-for="msg in errors.photo" :key="msg">{{ msg }}</li>
+        </ul>
+      </div>
       <input type="file" class="form__item" @change="onFileChange" />
       <output class="form__output" v-if="preview">
         <img :src="preview" alt />
@@ -14,6 +19,8 @@
 </template>
 
 <script>
+import { CREATED, UNPROCESSABLE_ENTITY } from "../util";
+
 export default {
   props: {
     value: {
@@ -24,7 +31,8 @@ export default {
   data() {
     return {
       preview: null,
-      photo: null
+      photo: null,
+      errors: null
     };
   },
   methods: {
@@ -63,6 +71,7 @@ export default {
       this.$el.querySelector('input[type="file"]').value = null;
       // this.$elはコンポーネントそのもののDOM要素を示す
     },
+    // fileを送信するメソッド
     async submit() {
       // FormDataのインスタンスを生成
       // FormData APIを使用
@@ -70,11 +79,26 @@ export default {
       formData.append("photo", this.photo);
       const response = await axios.post("/api/photos", formData);
 
+      //   バリデーションエラー処理
+      //   エラーメッセージを表示するタイミング上、formを閉じる前に表示させる
+      if (response.status === UNPROCESSABLE_ENTITY) {
+        this.errors = response.data.errors;
+        // エラーをセットして表示する処理が終わったあとに、returnすることで処理を中断する
+        return false;
+      }
+
       // 送信が終わったらresetを呼んで入力値をクリアする。
       this.reset();
       // inputイベントで発行される値をfalseにすることで、Navbarの`showForm`がfalseになる => 自動でフォームが閉じる
       this$emit("input", false);
       // 投稿完了後、axiosのresに入ってるidの詳細ページに遷移する
+
+      if (response.status !== CREATED) {
+        //   vuexのerror codeにステータスをsetする
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+
       this.$router.push(`/photo/${response.data.id}`);
     }
   }
