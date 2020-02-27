@@ -399,3 +399,32 @@ export default {
         2. コントローラや.envなどの設定が間違っていない
         3. 呼び出しのrouteが怪しい
             1. `contoroller` => `controller` タイポを直して無事修正完了！
+
+# 写真のダウンロード処理
+
+[Content-Disposition](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Disposition)
+
+```php
+    /**
+     * 写真ダウンロード
+     * @param Photo $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function download(Photo $photo)
+    {
+
+        // 写真の存在チェック
+        if (!Storage::cloud()->exists($photo->filename)) {
+            abort(404);
+        }
+
+        $disposition = 'attachment; filename="' . $photo->filename . '"';
+        $headers = [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => $disposition,
+        ];
+
+        return response(Storage::cloud()->get($photo->filename), 200, $headers);
+    }
+}
+```
