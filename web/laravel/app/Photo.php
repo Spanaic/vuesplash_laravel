@@ -2,11 +2,47 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 class Photo extends Model
 {
+
+    /**
+     * リレーションシップ - usersテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id', 'users');
+    }
+
+    /**
+     * アクセサ - url
+     * @return string
+     */
+
+    public function getUrlAttribute()
+    {
+        return Storage::cloud()->url($this->attributes['filename']);
+    }
+
+    /** JSONに含める属性 */
+    // アクセサをJSONに含めるためには明示的に`$appends`プロパティに登録する必要がある
+    protected $appends = [
+        'url',
+    ];
+
+    /** JSONに含める属性 */
+    protected $visible = [
+        'id', 'owner', 'url'
+    ];
+
+
+
+
     /** プライマリキーの型 */
     protected $keyType = 'string';
 
