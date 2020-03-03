@@ -435,6 +435,7 @@ export default {
     * event.stopPropagation()
 2. `@click.prevent`はがめんの遷移を行わない。
     * event.preventDefault()
+3.  `@click.prevent`で試したら、**axiosでapiの呼び出しが実行されなかった！！**
 
 # watchで$routeを監視する理由
 
@@ -453,3 +454,16 @@ export default {
 1. createdで`fetchPhotos()`をいつものように呼ぶと、コンポーネントが使い回され、2ページ目に移動した時に、`created`が呼ばれない->`fetchPhotos`も呼ばれない->データが変わらない
 2. `$route`の監視ハンドラ内で`fetchPhotos`を実行
     * 最初のレンダリング時に実行されないので、`immediate: true`の設定をしている->レンダリング時に実行されるオプション
+
+# router.jsのpageをpropsで渡す記述
+
+```js (router.js)
+    {
+        path: '/',
+        component: PhotoList,
+        props: route => {
+            const page = route.query.page
+            return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
+        }
+    },\
+```

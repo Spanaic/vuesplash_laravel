@@ -89,4 +89,7 @@ class Photo extends Model
 
         return $id;
     }
+
+    // 写真一覧の１ページあたりの表示枚数
+    protected $perPage = 3;
 }

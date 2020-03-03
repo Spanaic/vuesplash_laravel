@@ -23,7 +23,11 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        component: PhotoList
+        component: PhotoList,
+        props: route => {
+            const page = route.query.page
+            return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
+        }
     },
     {
         path: '/login',
@@ -47,13 +51,16 @@ const routes = [
         path: '/photos/:id', //pureなvueであればページ名に`_id`としなくてもrouterの記述でどうにか出来る
         component: PhotoDetail,
         props: true //変数部分のIDの値をpropsとして受け取る
-    }
+    },
 ]
 
 // histroyモードでURLの'#'をなくす
 // VueRouterインスタンスを生成
 const router = new VueRouter({
     mode: 'history',
+    scrollBehavior() {
+        return { x: 0, y: 0 }
+    },
     routes
 })
 
