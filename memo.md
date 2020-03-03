@@ -428,3 +428,28 @@ export default {
     }
 }
 ```
+
+# @click.stop === event.stopPropagation()の意味
+
+1. `@click.stop`はイベントの伝播を止める。
+    * event.stopPropagation()
+2. `@click.prevent`はがめんの遷移を行わない。
+    * event.preventDefault()
+
+# watchで$routeを監視する理由
+
+```js
+  watch: {
+    $route: {
+      // $routeを監視して、ページが切り替わった時に関数`fetchPhotos()`を実行させる
+      async handler() {
+        await this.fetchPhotos();
+      },
+      immediate: true //コンポーネントが生成されたタイミングでも実行される
+    }
+  }
+```
+
+1. createdで`fetchPhotos()`をいつものように呼ぶと、コンポーネントが使い回され、2ページ目に移動した時に、`created`が呼ばれない->`fetchPhotos`も呼ばれない->データが変わらない
+2. `$route`の監視ハンドラ内で`fetchPhotos`を実行
+    * 最初のレンダリング時に実行されないので、`immediate: true`の設定をしている->レンダリング時に実行されるオプション
